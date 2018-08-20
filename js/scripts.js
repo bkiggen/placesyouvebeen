@@ -9,7 +9,7 @@ function Place(name, country, date, notes) {
 }
 
 function Attraction(attraction){
-  this.draw = attraction;
+  this.attraction = attraction;
 }
 
 Place.prototype.namePlace = function() {
@@ -21,8 +21,10 @@ Place.prototype.namePlace = function() {
 
 $(document).ready(function() {
   $("#add-attraction").click(function(){
-    $("#attraction-section").append('<label for="new-attraction">Attraction</label>' +
-    '<input type="text" class="form-control" class="new-attraction">');
+    $("#attraction-section").append('<div class="form-group">' +
+      '<label for="new-attraction">Attraction</label>' +
+      '<input type="text" class="form-control new-attraction">' +
+      '</div>');
   });
 
   $("form#new-trip").submit(function(event){
@@ -34,7 +36,7 @@ $(document).ready(function() {
     var inputtedNotes = $("input#new-notes").val();
     var newPlace = new Place(inputtedName, inputtedCountry, inputtedDate, inputtedNotes);
 
-    $("#attraction-section").each(function() {
+    $("#attraction-section > .form-group").each(function() {
       var inputtedAttraction = $(this).find("input.new-attraction").val();
       var newAttraction = new Attraction(inputtedAttraction);
       newPlace.attractions.push(newAttraction);
@@ -51,19 +53,21 @@ $(document).ready(function() {
                             "</ul>" +
                             "</div>");
 
-    $(".place").last().click(function() {
+    $("#show-place").last().click(function() {
+      $("show-place").show();
+      $("#show-place").text(newPlace.namePlace());
       $(".date").text("Date: " + newPlace.date);
       $(".notes").text("Notes: " + newPlace.notes);
-
+      $("ul.attractions").text("");
       newPlace.attractions.forEach(function(attraction){
-        $("ul.attractions").append("<li>" + attraction.draw + "</li>");
+        $("ul.attractions").append("<li>" + attraction.attraction + "</li>");
       });
     });
 
 
     $("input#new-name").val("");
     $("input#new-country").val("");
-    $("input#new-attraction").val("");
+    $("input.new-attraction").val("");
     $("input#new-date").val("");
     $("input#new-notes").val("");
 
