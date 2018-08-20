@@ -1,77 +1,71 @@
-//business logic
+// business logic
 
-function Contact(first, last) {
-  this.firstName = first;
-  this.lastName = last;
-  this.addresses = [];
+function Place(name, country, date, notes) {
+  this.name = name;
+  this.country = country;
+  this.attractions = [];
+  this.date = date;
+  this.notes = notes;
 }
 
-
-
-function Address(street, city, state) {
-  this.street = street;
-  this.city = city;
-  this.state = state;
+function Attraction(attraction){
+  this.draw = attraction;
 }
 
-
-
+Place.prototype.namePlace = function() {
+  return this.name + ", " + this.country;
+}
 
 
 //user interface logic
 
 $(document).ready(function() {
-
-  $("#add-address").click(function() {
-    $("new-addresses").append('<div class="new-address">' +
-    '<div class="form-group">' +
-    '<label for="new-street">Street</label>' +
-    '<input type="text" class="form-control new-street">' +
-    '</div>' +
-    '<div class="form-group">' +
-    '<label for="new-city">City</label>' +
-    '<input type="text" class="form-control new-city">' +
-    '</div>' +
-    '<div class="form-group">' +
-    '<label for="new-state">State</label>' +
-    '<input type="text" class="form-control new-state">' +
-    '</div>' +
-    '</div>');
+  $("#add-attraction").click(function(){
+    $("#attraction-section").append('<label for="new-attraction">Attraction</label>' +
+    '<input type="text" class="form-control" class="new-attraction">');
   });
 
-  $("form#new-contact").submit(function(event){
+  $("form#new-trip").submit(function(event){
     event.preventDefault();
 
-    var inputtedFirstName = $("input#new-first-name").val();
-    var inputtedLastName = $("input#new-last-name").val();
-    var newContact = new Contact(inputtedFirstName, inputtedLastName);
+    var inputtedName = $("input#new-name").val();
+    var inputtedCountry = $("input#new-country").val();
+    var inputtedDate = $("input#new-date").val();
+    var inputtedNotes = $("input#new-notes").val();
+    var newPlace = new Place(inputtedName, inputtedCountry, inputtedDate, inputtedNotes);
 
-    $(".new-address").each(function() {
-      var inputtedStreet = $(this).find("input.new-street").val();
-      var inputtedCity = $(this).find("input.new-city").val();
-      var inputtedState = $(this).find("input.new-state").val();
-      var newAddress = new Address(inputtedStreet, inputtedCity, inputtedState);
-      newContact.addresses.push(newAddress);
+    $("#attraction-section").each(function() {
+      var inputtedAttraction = $(this).find("input.new-attraction").val();
+      var newAttraction = new Attraction(inputtedAttraction);
+      newPlace.attractions.push(newAttraction);
     });
 
-    $("ul#contacts").append("<li><span class='contact'>" + newContact.FullName() + "</span></li>");
 
-    $(".contact").last().click(function(){
-      $("#show-contact").show();
-      $("#show-contact h2").text(newContact.fullName());
-      $(".first-name").text(newContact.firstName);
-      $(".last-name").text(newContact.lastName);
-      $("ul#addresses").text("");
-      newContact.addresses.forEach(function(address){
-        $("ul#addresses").append("<li>" + address.street + ", " + address.city + " " + address.state + "</li>");
+    $("#show-place").append("<div class='well place'>" +
+                            "<h2>" +
+                            newPlace.namePlace() +
+                            "</h2>" +
+                            "<p class='date'></p>" +
+                            "<p class='notes'></p>" +
+                            "<ul class='attractions'>" +
+                            "</ul>" +
+                            "</div>");
+
+    $(".place").last().click(function() {
+      $(".date").text("Date: " + newPlace.date);
+      $(".notes").text("Notes: " + newPlace.notes);
+
+      newPlace.attractions.forEach(function(attraction){
+        $("ul.attractions").append("<li>" + attraction.draw + "</li>");
       });
     });
 
-    $("input#new-first-name").val("");
-    $("input#new-last-name").val("");
-    $("input.new-street").val("");
-    $("input.new-city").val("");
-    $("input.new-state").val("");
 
-  });  
+    $("input#new-name").val("");
+    $("input#new-country").val("");
+    $("input#new-attraction").val("");
+    $("input#new-date").val("");
+    $("input#new-notes").val("");
+
+  });
 });
